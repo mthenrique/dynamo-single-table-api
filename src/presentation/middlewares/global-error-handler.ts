@@ -4,7 +4,6 @@ import { NotFoundError } from '@/domain/errors/not-found-error';
 import { ParametersError } from '@/domain/errors/parameters-error';
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 
-// Middleware para tratar rotas não encontradas (404)
 export const notFoundHandler = (
   req: Request,
   res: Response,
@@ -14,14 +13,12 @@ export const notFoundHandler = (
   next(error);
 };
 
-// Middleware global para tratamento de erros
 export const globalErrorHandler: ErrorRequestHandler = (
   error: Error,
   request: Request,
   response: Response,
   next: NextFunction,
 ): void => {
-  // Se já foi enviada uma resposta, não envie outra
   if (response.headersSent) {
     return;
   }
@@ -58,8 +55,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
     });
   }
 
-  // TODO: Add logger
-  console.error('🚀 ~ ERRO: ', error);
+  console.error('❌ Error: ', error);
 
   next();
 };

@@ -10,7 +10,6 @@ export interface IBaseRepository<T extends BaseEntity> {
   ): Promise<T>;
   delete(PK: string, SK: string): Promise<void>;
 
-  // Query methods specific to single table design
   queryByPK(PK: string): Promise<T[]>;
   queryByGSI1(GSI1PK: string, GSI1SK: string): Promise<T[]>;
   queryByGSI2(GSI2PK: string, GSI2SK: string): Promise<T[]>;

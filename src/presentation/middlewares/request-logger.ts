@@ -7,12 +7,10 @@ export const requestLogger = (
 ): void => {
   const start = Date.now();
 
-  // Log da requisição
   console.log(
     `[${new Date().toISOString()}] ${req.method} ${req.path} - Started`,
   );
 
-  // Intercepta o final da resposta para logar o tempo
   res.on('finish', () => {
     const duration = Date.now() - start;
     console.log(

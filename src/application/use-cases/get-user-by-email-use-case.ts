@@ -21,10 +21,8 @@ export class GetUserByEmailUseCase {
 
       const [user] = users;
 
-      // Extrai o id do PK (USER#id)
       const userId = user.PK.replace('USER#', '');
 
-      // Adiciona o id ao objeto retornado
       return {
         id: userId,
         ...user,

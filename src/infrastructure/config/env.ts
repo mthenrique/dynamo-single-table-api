@@ -4,7 +4,6 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-  // Servidor
   NODE_ENV: z
     .enum(['local', 'development', 'production', 'test'])
     .default('local'),
@@ -12,15 +11,12 @@ const envSchema = z.object({
   AWS_REGION: z.string().min(1),
   DYNAMODB_TABLE_NAME: z.string().min(1),
 
-  // AWS Credentials (opcional para desenvolvimento local)
   AWS_ACCESS_KEY_ID: z.string().optional(),
   AWS_SECRET_ACCESS_KEY: z.string().optional(),
 
-  // Logs
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
 });
 
-// Valida as variáveis de ambiente
 const envParseResult = envSchema.safeParse(process.env);
 
 if (!envParseResult.success) {

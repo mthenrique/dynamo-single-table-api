@@ -19,7 +19,6 @@ export class UpdateUserUseCase {
         throw new NotFoundError('User not found');
       }
 
-      // Filter out undefined values to avoid overwriting existing data
       const updateData: Partial<User> = {};
 
       if (userData.name !== undefined) {

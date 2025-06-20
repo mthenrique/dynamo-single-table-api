@@ -11,16 +11,13 @@ import { createUserRoutes } from './presentation/routes/app-route';
 
 const app = express();
 
-// Middlewares globais
 app.use(express.json());
 app.use(requestLogger);
 
-// Initialize routes using factory pattern
 const appRoutes = createUserRoutes();
 
 app.use(appRoutes);
 
-// Global error handler (must be the last middleware)
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
 

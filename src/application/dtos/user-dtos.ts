@@ -1,6 +1,5 @@
 import { User } from '@/domain/entities/user';
 
-// Input DTOs - For use cases
 export type CreateUserInputDTO = {
   email: string;
   name: string;
@@ -20,8 +19,6 @@ export type UpdateUserInputDTO = {
   };
 };
 
-// Output DTOs - For use cases
-
 export type UserResponseDTO = {
   id: string;
   email: string;
@@ -39,8 +36,6 @@ export type UserListResponseDTO = {
   users: UserResponseDTO[];
   total: number;
 };
-
-// Query Parameters DTOs - For queries
 
 export type GetUsersByStatusDTO = {
   status: User['status'];
