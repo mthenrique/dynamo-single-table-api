@@ -129,7 +129,7 @@ Este é um projeto de demonstração/portfólio. Se você quiser contribuir com 
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a Licença ISC.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ---
 
