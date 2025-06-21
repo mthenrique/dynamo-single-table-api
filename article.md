@@ -89,10 +89,10 @@ src/
 │ ├── validators/ # Implementações de validação (Zod)
 │ ├── config/ # Configurações (env, etc.)
 │ └── factories/ # Factories para injeção de dependência
-└── presentation/ # Controllers, rotas e middlewares
-├── controllers/ # Controllers da aplicação
-├── routes/ # Definição de rotas
-└── middlewares/ # Middlewares (error handling, logging)
+├── presentation/ # Controllers, rotas e middlewares
+│ ├── controllers/ # Controllers da aplicação
+│ ├── routes/ # Definição de rotas
+│ └── middlewares/ # Middlewares (error handling, logging)
 ```
 
 ### Exemplo de Entidade
