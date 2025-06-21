@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   localstack:
     image: localstack/localstack:latest
@@ -22,9 +20,15 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
-      - localstack-network
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
-  # Optional: DynamoDB Admin UI for easier management
+  # DynamoDB Admin UI for easier management
   dynamodb-admin:
     image: aaronshaf/dynamodb-admin:latest
     container_name: dynamo-admin
@@ -36,10 +40,56 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     depends_on:
-      - localstack
+      localstack:
+        condition: service_healthy
     networks:
-      - localstack-network
+      - app-network
+
+  # Setup script to create DynamoDB table
+  setup:
+    image: amazon/aws-cli:latest
+    container_name: dynamo-setup
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - ./scripts:/scripts
+    entrypoint: ["/bin/bash"]
+    command: ["-c", "chmod +x /scripts/create-table.sh && /scripts/create-table.sh"]
+    depends_on:
+      localstack:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: on-failure
+
+  # Node.js Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dynamo-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - AWS_ENDPOINT=http://localstack:4566
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DYNAMODB_TABLE_NAME=SingleTableDesign
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    networks:
+      - app-network
+    restart: unless-stopped
 
 networks:
-  localstack-network:
+  app-network:
     driver: bridge 

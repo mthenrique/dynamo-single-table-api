@@ -73,6 +73,32 @@ Este projeto foi desenvolvido para demonstrar:
 | **Padrões**        | SOLID, Factory, Repository |
 | **DevOps**         | Docker, LocalStack         |
 
+## 🔧 Configuração Local
+
+O projeto oferece duas formas de configuração:
+
+### 🐳 **Docker (Recomendado para Demonstração)**
+
+Para setup rápido e ambiente isolado:
+
+```bash
+docker-compose up -d
+```
+
+> 📖 **Para instruções detalhadas de Docker**, consulte o [README-DOCKER.md](./README-DOCKER.md)
+
+### 🔧 **Configuração Manual (Recomendado para Desenvolvimento)**
+
+Para desenvolvimento com debugging nativo e melhor performance:
+
+```bash
+npm install
+docker-compose up localstack -d  # Apenas LocalStack
+npm run dev
+```
+
+> 📖 **Para instruções detalhadas de configuração manual**, consulte o [README-LOCAL.md](./README-LOCAL.md)
+
 ## 📊 Otimização de Custos
 
 Esta implementação reduz significativamente os custos do DynamoDB através de:
@@ -82,15 +108,6 @@ Esta implementação reduz significativamente os custos do DynamoDB através de:
 3. **GSI Estratégico** - Apenas quando necessário
 4. **Sem Scans** - Todas as consultas usam índices
 5. **Projeção Mínima** - Apenas dados necessários
-
-## 🔧 Configuração Local
-
-Para desenvolvimento local, consulte o [README-LOCAL.md](./README-LOCAL.md) que contém:
-
-- Instruções detalhadas de setup
-- Configuração do LocalStack
-- Comandos de criação da tabela
-- Exemplos completos de uso
 
 ## 📈 Métricas de Qualidade
 

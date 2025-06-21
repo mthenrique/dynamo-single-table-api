@@ -1,16 +1,23 @@
-# Configuração Local e Exemplos de Uso
+# 🔧 Configuração Local Manual
 
-Este guia explica como configurar e rodar o projeto localmente usando LocalStack para simular o DynamoDB, incluindo exemplos práticos de uso da API.
+Este guia explica como configurar e rodar o projeto **sem Docker**, instalando todas as dependências localmente.
 
-## Pré-requisitos
+## 📋 Pré-requisitos
 
-- Docker e Docker Compose instalados
-- AWS CLI instalado
 - Node.js 18+
+- AWS CLI instalado
+- Docker (apenas para LocalStack)
 
-## Configuração
+## 🚀 Configuração Manual
 
-### 1. Variáveis de Ambiente
+### 1. Instalar Dependências
+
+```bash
+# Instalar dependências do projeto
+npm install
+```
+
+### 2. Configurar Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto:
 
@@ -21,6 +28,7 @@ PORT=3000
 LOG_LEVEL=info
 
 # AWS Configuration (LocalStack)
+AWS_ENDPOINT=http://localstack:4566
 AWS_REGION=us-east-1
 DYNAMODB_TABLE_NAME=SingleTableDesign
 
@@ -29,16 +37,20 @@ AWS_ACCESS_KEY_ID=test
 AWS_SECRET_ACCESS_KEY=test
 ```
 
-### 2. Iniciar LocalStack
+### 3. Iniciar LocalStack
 
 ```bash
-# Inicia os containers
-docker-compose up -d
+# Iniciar apenas o LocalStack
+docker-compose up localstack -d
 
-# Aguarda o LocalStack estar pronto
+# Aguardar o LocalStack estar pronto
 sleep 10
+```
 
-# Cria a tabela no DynamoDB local
+### 4. Criar Tabela DynamoDB
+
+```bash
+# Criar a tabela no DynamoDB local
 aws dynamodb create-table \
   --endpoint-url http://localhost:4566 \
   --region us-east-1 \
@@ -63,6 +75,10 @@ aws dynamodb create-table \
         ],
         \"Projection\": {
           \"ProjectionType\": \"ALL\"
+        },
+        \"ProvisionedThroughput\": {
+          \"ReadCapacityUnits\": 5,
+          \"WriteCapacityUnits\": 5
         }
       },
       {
@@ -73,41 +89,35 @@ aws dynamodb create-table \
         ],
         \"Projection\": {
           \"ProjectionType\": \"ALL\"
+        },
+        \"ProvisionedThroughput\": {
+          \"ReadCapacityUnits\": 5,
+          \"WriteCapacityUnits\": 5
         }
       }
     ]" \
-  --billing-mode PAY_PER_REQUEST
+  --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
 
-## Acessos
-
-- **LocalStack**: http://localhost:4566
-- **DynamoDB Admin UI**: http://localhost:8001
-- **API**: http://localhost:3333
-
-## Comandos Úteis
+### 5. Executar a Aplicação
 
 ```bash
-# Iniciar containers
-docker-compose up -d
+# Modo desenvolvimento com hot reload
+npm run dev
 
-# Parar containers
-docker-compose down
-
-# Ver logs
-docker-compose logs -f
-
-# Ver logs de um serviço específico
-docker-compose logs -f localstack
-
-# Reiniciar containers
-docker-compose restart
-
-# Remover containers e volumes
-docker-compose down -v
+# Ou build e executar
+npm run build
+npm start
 ```
 
-## Estrutura da Tabela
+## 📊 Serviços Disponíveis
+
+| Serviço        | URL                   | Descrição          |
+| -------------- | --------------------- | ------------------ |
+| **API**        | http://localhost:3000 | API REST principal |
+| **LocalStack** | http://localhost:4566 | Emulador AWS local |
+
+## 🏗️ Estrutura da Tabela
 
 A tabela `SingleTableDesign` é criada com:
 
@@ -120,14 +130,12 @@ A tabela `SingleTableDesign` é criada com:
   - PK: GSI2PK (String)
   - SK: GSI2SK (String)
 
-## Testando a API
-
-Após iniciar tudo, você pode testar a API:
+## 🧪 Testando a API
 
 ### Criar usuário
 
 ```bash
-curl -X POST http://localhost:3333/users \
+curl -X POST http://localhost:3000/users \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
@@ -143,25 +151,25 @@ curl -X POST http://localhost:3333/users \
 ### Buscar usuário por ID
 
 ```bash
-curl http://localhost:3333/users/{USER_ID}
+curl http://localhost:3000/users/{USER_ID}
 ```
 
 ### Buscar usuário por email
 
 ```bash
-curl http://localhost:3333/users/email/test@example.com
+curl http://localhost:3000/users/email/test@example.com
 ```
 
 ### Buscar usuários por status
 
 ```bash
-curl http://localhost:3333/users/status/ACTIVE
+curl http://localhost:3000/users/status/ACTIVE
 ```
 
 ### Atualizar usuário
 
 ```bash
-curl -X PUT http://localhost:3333/users \
+curl -X PUT http://localhost:3000/users \
   -H "Content-Type: application/json" \
   -d '{
     "id": "uuid-do-usuario",
@@ -176,10 +184,24 @@ curl -X PUT http://localhost:3333/users \
 ### Deletar usuário
 
 ```bash
-curl -X DELETE http://localhost:3333/users/{USER_ID}
+curl -X DELETE http://localhost:3000/users/{USER_ID}
 ```
 
-## Tratamento de Erros
+## 🛠️ Comandos Úteis
+
+```bash
+# Desenvolvimento
+npm run dev          # Hot reload
+npm run build        # Build TypeScript
+npm start           # Executar build
+
+# Docker (apenas LocalStack)
+docker-compose up localstack -d    # Iniciar LocalStack
+docker-compose down               # Parar LocalStack
+docker-compose logs localstack    # Ver logs LocalStack
+```
+
+## ⚠️ Tratamento de Erros
 
 A API retorna erros formatados consistentemente:
 
@@ -216,7 +238,7 @@ A API retorna erros formatados consistentemente:
 ```json
 {
   "statusCode": 500,
-  "isOperational": true,
+  "isOperational": false,
   "name": "ExceptionError",
   "status": "error",
   "message": "Failed to get user by id"
