@@ -32,8 +32,8 @@ Este projeto foi desenvolvido para demonstrar:
 
 ```
 📁 src/
-├── 🏛️  domain/          # Entidades e regras de negócio
-├── ⚙️  application/     # Casos de uso e lógica de aplicação
+├── 🏛️ domain/           # Entidades e regras de negócio
+├── ⚙️ application/      # Casos de uso e lógica de aplicação
 ├── 🔧 infrastructure/   # Implementações externas
 └── 🌐 presentation/     # Controllers e rotas
 ```
